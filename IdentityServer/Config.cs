@@ -57,6 +57,25 @@ namespace IdentityServerWithAspNetIdentity
                         IdentityServerConstants.StandardScopes.Profile,
                         "api1"
                     },
+                },
+                new Client {
+                    RequireConsent = false,
+                    ClientId = "angular_spa",
+                    ClientName = "Angular SPA",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    // AllowedScopes = { "openid", "profile", "email", "api.read" },
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+                        "api2"
+                    },
+                    RedirectUris = {"http://localhost:4200/auth-callback"},
+                    PostLogoutRedirectUris = {"http://localhost:4200/"},
+                    AllowedCorsOrigins = {"http://localhost:4200"},
+                    AllowAccessTokensViaBrowser = true,
+                    AccessTokenLifetime = 3600                    
                 }
             };
         }
