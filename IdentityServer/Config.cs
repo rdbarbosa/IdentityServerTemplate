@@ -32,6 +32,16 @@ namespace IdentityServerWithAspNetIdentity
         {
             return new List<Client>
             {
+                new Client {
+                    RequireConsent = false,
+                    ClientId = "api1_swagger",
+                    ClientName = "My API Swagger",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    AllowedScopes = { "api1" },
+                    RedirectUris = {"http://localhost:5001/oauth2-redirect.html"},
+                    AllowAccessTokensViaBrowser = true,
+                    AccessTokenLifetime = 3600
+                },
                 new Client
                 {
                     ClientId = "spa",

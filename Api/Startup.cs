@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.JsonPatch.Operations;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.Collections.Generic;
 
 namespace Api
 {
@@ -33,7 +33,8 @@ namespace Api
                      .Build();
                 config.Filters.Add(new AuthorizeFilter(policy)); //global authorize filter
             })
-                .AddAuthorization();
+                .AddAuthorization()
+                .AddApiExplorer();
                 //.AddJsonFormatters();
 
             services.AddAuthentication("Bearer")
@@ -55,6 +56,27 @@ namespace Api
                         .AllowAnyMethod();
                 });
             });
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Flows = new OpenApiOAuthFlows 
+                    {
+                        Implicit = new OpenApiOAuthFlow
+                        {
+                            AuthorizationUrl = new Uri("http://localhost:5000/connect/authorize"),
+                            Scopes = new Dictionary<string, string> {
+                                { "api1", "My API" }
+                            }
+                        }
+                    },
+                });
+
+                //c.OperationFilter<>();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +86,15 @@ namespace Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.OAuthClientId("api1_swagger");
+                c.OAuthAppName("My API Swagger");
+            });
 
             app.UseRouting();
             app.UseCors("default");
