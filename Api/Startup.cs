@@ -42,7 +42,6 @@ namespace Api
                 {
                     options.Authority = "http://localhost:5000";
                     options.RequireHttpsMetadata = false;
-
                     options.ApiName = "api1";
                 });
 
@@ -60,22 +59,23 @@ namespace Api
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "api1", Version = "v1" });
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
+                    Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows 
                     {
                         Implicit = new OpenApiOAuthFlow
                         {
                             AuthorizationUrl = new Uri("http://localhost:5000/connect/authorize"),
                             Scopes = new Dictionary<string, string> {
-                                { "api1", "My API" }
+                                { "api1", "api2" }
                             }
                         }
                     },
                 });
 
-                //c.OperationFilter<>();
+                //c.OperationFilter<AuthorizeCheckOperationFilter>();
             });
         }
 

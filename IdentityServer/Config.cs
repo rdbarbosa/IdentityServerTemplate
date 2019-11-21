@@ -38,7 +38,7 @@ namespace IdentityServerWithAspNetIdentity
                     ClientName = "My API Swagger",
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowedScopes = { "api1" },
-                    RedirectUris = {"http://localhost:5001/oauth2-redirect.html"},
+                    RedirectUris = { "http://localhost:55194/swagger/oauth2-redirect.html" },
                     AllowAccessTokensViaBrowser = true,
                     AccessTokenLifetime = 3600
                 },
@@ -60,7 +60,6 @@ namespace IdentityServerWithAspNetIdentity
                         "http://localhost:5000/account/login"
                     },
                     AllowedCorsOrigins = { "http://localhost:5100" },
-
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
