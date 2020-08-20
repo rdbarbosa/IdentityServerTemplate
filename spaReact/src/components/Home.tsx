@@ -7,7 +7,7 @@ const Home = () => {
   const callApi = () => {
     // quick and dirty test for calling the api
     axios
-      .get('http://localhost:5200/api/values')
+      .get('http://localhost:55194/api/values')
       .then((response: any) => {
         console.log(response);
         setApiResult(JSON.stringify(response.data, null, 2));

@@ -32,6 +32,17 @@ namespace IdentityServerWithAspNetIdentity
         {
             return new List<Client>
             {
+                new Client
+                {
+                    ClientId = "identitymanager2",
+                    ClientName = "IdentityManager2",
+                    AllowedGrantTypes = GrantTypes.Implicit,
+                    RedirectUris = {"http://localhost:5001/signin-oidc"},
+                    AllowedScopes = { "openid", "profile", "roles" },
+                    RequireConsent = false,
+                    AllowAccessTokensViaBrowser = true,
+                    AccessTokenLifetime = 3600
+                },
                 new Client {
                     RequireConsent = false,
                     ClientId = "api1_swagger",
@@ -39,8 +50,7 @@ namespace IdentityServerWithAspNetIdentity
                     AllowedGrantTypes = GrantTypes.Implicit,
                     AllowedScopes = { "api1" },
                     RedirectUris = { "http://localhost:55194/swagger/oauth2-redirect.html" },
-                    AllowAccessTokensViaBrowser = true,
-                    AccessTokenLifetime = 3600
+                    AllowAccessTokensViaBrowser = true
                 },
                 new Client
                 {

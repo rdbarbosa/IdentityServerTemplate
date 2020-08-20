@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.JsonPatch.Operations;
@@ -37,12 +38,21 @@ namespace Api
                 .AddApiExplorer();
                 //.AddJsonFormatters();
 
-            services.AddAuthentication("Bearer")
+            //services.AddAuthentication("Bearer")
+            //    .AddIdentityServerAuthentication(options =>
+            //    {
+            //        options.Authority = "http://localhost:5000";
+            //        options.RequireHttpsMetadata = false;
+            //        options.ApiName = "api1";
+            //    });
+
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
+                    // auth server base endpoint (will use to search for disco doc)
                     options.Authority = "http://localhost:5000";
-                    options.RequireHttpsMetadata = false;
-                    options.ApiName = "api1";
+                    options.ApiName = "api1_swagger"; // required audience of access tokens
+                    options.RequireHttpsMetadata = false; // dev only!
                 });
 
             services.AddCors(options =>
@@ -50,7 +60,8 @@ namespace Api
                 // this defines a CORS policy called "default"
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5100")
+                    policy.AllowAnyOrigin()
+                        //.WithOrigins("http://localhost:5100")
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
@@ -73,6 +84,25 @@ namespace Api
                             }
                         }
                     },
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Oauth2"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Oauth2",
+                            In = ParameterLocation.Header,
+
+                        },
+                        new List<string>()
+                    }
                 });
 
                 //c.OperationFilter<AuthorizeCheckOperationFilter>();
